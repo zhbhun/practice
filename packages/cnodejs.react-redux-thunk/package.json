@@ -1,0 +1,51 @@
+{
+  "name": "cnodejs.react-redux-thunk",
+  "version": "1.0.0",
+  "main": "./lib/index.js",
+  "scripts": {
+    "lint": "eslint ./src",
+    "clean": "rimraf ./lib",
+    "build": "npm run clean && cross-env NODE_ENV=production babel src -d lib -D",
+    "watch": "npm run clean && cross-env NODE_ENV=development babel src -d lib -w -D",
+    "test": "react-scripts test --env=jsdom"
+  },
+  "dependencies": {
+    "cnodejs.api": "^1.0.0",
+    "connected-react-router": "^4.3.0",
+    "lodash.merge": "^4.6.1",
+    "normalizr": "^3.2.4",
+    "react-redux": "^5.0.7",
+    "redux": "^4.0.0",
+    "redux-thunk": "^2.3.0"
+  },
+  "peerDependencies": {
+    "cnodejs.react-material": "^1.0.0",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-router-dom": "^4.3.1"
+  },
+  "devDependencies": {
+    "babel-preset-stage-2": "^6.24.1",
+    "cross-env": "^5.2.0",
+    "react-scripts": "1.1.4",
+    "rimraf": "^2.6.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "iOS >= 7",
+              "Android >= 4.2",
+              "last 2 QQAndroid versions"
+            ]
+          }
+        }
+      ],
+      "stage-2",
+      "react"
+    ]
+  }
+}

@@ -1,0 +1,54 @@
+{
+  "name": "cnodejs.react-material",
+  "version": "1.0.0",
+  "description": "cnodejs's react-material components.",
+  "license": "MIT",
+  "repository": {},
+  "main": "./lib/index.js",
+  "scripts": {
+    "lint": "eslint ./src",
+    "clean": "rimraf ./lib",
+    "build": "npm run clean && cross-env NODE_ENV=production babel src -d lib -D",
+    "watch": "npm run clean && cross-env NODE_ENV=development babel src -d lib -w -D"
+  },
+  "dependencies": {
+    "@material-ui/core": "^1.4.1",
+    "@material-ui/icons": "^2.0.0",
+    "classnames": "^2.2.6",
+    "dayjs": "^1.7.4",
+    "intersection-observer": "^0.5.0",
+    "prop-types": "^15.6.2",
+    "query-string": "^5.1.1",
+    "timeago.js": "^3.0.2"
+  },
+  "peerDependencies": {
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-router-dom": "^4.3.1"
+  },
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "cross-env": "^5.2.0",
+    "react-scripts": "1.1.4",
+    "rimraf": "^2.6.2"
+  },
+  "babel": {
+    "presets": [
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "iOS >= 7",
+              "Android >= 4.2",
+              "last 2 QQAndroid versions"
+            ]
+          }
+        }
+      ],
+      "stage-2",
+      "react"
+    ]
+  }
+}

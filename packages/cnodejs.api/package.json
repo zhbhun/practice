@@ -1,0 +1,36 @@
+{
+  "name": "cnodejs.api",
+  "version": "1.0.0",
+  "description": "",
+  "main": "lib/index.js",
+  "scripts": {
+    "clean": "rimraf ./lib",
+    "build": "npm run clean && babel src --out-dir lib"
+  },
+  "keywords": [],
+  "author": "zhbhun",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.7.0",
+    "babel-preset-stage-2": "^6.24.1",
+    "rimraf": "^2.6.2"
+  },
+  "babel": {
+    "presets": [
+      "stage-2",
+      [
+        "env",
+        {
+          "targets": {
+            "browsers": [
+              "iOS >= 7",
+              "Android >= 4.2",
+              "last 2 QQAndroid versions"
+            ]
+          }
+        }
+      ]
+    ]
+  }
+}
