@@ -9,37 +9,12 @@
     "react-router-dom": "^4.3.1"
   },
   "devDependencies": {
-    "babel-preset-stage-2": "^6.24.1",
-    "cross-env": "^5.2.0",
-    "react-scripts": "1.1.4",
-    "rimraf": "^2.6.2"
+    "react-scripts": "1.1.4"
   },
   "scripts": {
-    "lint": "eslint ./src",
-    "clean:lib": "rimraf ./lib",
-    "build:lib": "npm run clean:lib && cross-env NODE_ENV=production babel src -d lib -D",
-    "watch:lib": "npm run clean:lib && cross-env NODE_ENV=development babel src -d lib -w -D",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "babel": {
-    "presets": [
-      [
-        "env",
-        {
-          "targets": {
-            "browsers": [
-              "iOS >= 7",
-              "Android >= 4.2",
-              "last 2 QQAndroid versions"
-            ]
-          }
-        }
-      ],
-      "stage-2",
-      "react"
-    ]
   }
 }
