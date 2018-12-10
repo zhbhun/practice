@@ -1,0 +1,23 @@
+{
+  "name": "cnodejs.dva",
+  "version": "1.0.0",
+  "dependencies": {
+    "cnodejs.api": "^1.0.0",
+    "cnodejs.react-material": "^1.0.0",
+    "dva": "^2.4.0",
+    "lodash.merge": "^4.6.1",
+    "normalizr": "^3.2.4",
+    "react": "^16.4.1",
+    "react-dom": "^16.4.1",
+    "react-router-scroll-4": "^1.0.0-beta.2"
+  },
+  "devDependencies": {
+    "react-scripts": "1.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  }
+}
