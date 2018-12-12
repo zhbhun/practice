@@ -1,0 +1,12 @@
+{
+  "extends": "ease-react",
+  "env": {
+    "browser": true
+  },
+  "rules": {
+    "no-nested-ternary": 0,
+    "react/no-danger": 0,
+    "react/no-unused-state": 0,
+    "react/prefer-stateless-function": 0
+  }
+}
