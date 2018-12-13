@@ -10,6 +10,7 @@ import {
 } from 'react-onsenui';
 import createPage from '../../utils/createPage';
 import * as models from '../../models';
+import classes from './Topic.module.scss';
 
 class Topic extends PureComponent {
   renderTopic(topic) {
@@ -17,7 +18,7 @@ class Topic extends PureComponent {
       return null;
     }
     return (
-      <Card>
+      <Card className={classes.topic}>
         <div className="title">{topic.title}</div>
         <div
           className="content"
