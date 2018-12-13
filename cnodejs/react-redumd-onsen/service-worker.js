@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/practice/cnodejs/react-redumd-onsen/precache-manifest.0a77848c865ce84d928da7a725b9a40c.js"
+  "/practice/cnodejs/react-redumd-onsen/precache-manifest.58f59d38729a606b0d239775a0874e69.js"
 );
 
 workbox.clientsClaim();
