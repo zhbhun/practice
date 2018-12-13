@@ -47,13 +47,13 @@ class Topic extends PureComponent {
   }
 
   render() {
-    const { topic } = this.props;
+    const { topic, navigator } = this.props;
     return (
       <Page
         renderToolbar={() => (
           <Toolbar>
             <div className="left">
-              <BackButton>返回</BackButton>
+              <BackButton onClick={() => navigator.popPage()}>返回</BackButton>
             </div>
             <div className="center">话题</div>
           </Toolbar>
@@ -70,8 +70,8 @@ export default createPage({
   models: {
     topicDetail: models.TopicDetail,
   },
-  getInitialProps: ({ props: { id }, store, models: { topicDetail } }) => {
-    store.dispatch(topicDetail.actions.initiateIfNeed(id));
+  getInitialProps: ({ props: { match }, store, models: { topicDetail } }) => {
+    store.dispatch(topicDetail.actions.initiateIfNeed(match.params.id));
   },
   mapStateToProps: (state, { models: { topicDetail } }) => {
     const initiate = topicDetail.getInitiate(state);
