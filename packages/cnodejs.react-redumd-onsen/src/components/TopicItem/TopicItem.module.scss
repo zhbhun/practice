@@ -1,0 +1,9 @@
+.content {
+  /* autoprefixer: off */
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  /* autoprefixer: on */
+  overflow: hidden;
+  white-space: normal;
+}

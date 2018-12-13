@@ -1,26 +1,40 @@
-import classNames from 'classnames';
-import React, { PureComponent } from 'react';
+import React, { createRef, PureComponent } from 'react';
+import { findDOMNode } from 'react-dom';
+import { Icon, Page, PullHook, Toolbar, ToolbarButton } from 'react-onsenui';
 import {
-  Card,
-  Icon,
+  CellMeasurer,
+  CellMeasurerCache,
+  InfiniteLoader,
   List,
-  Page,
-  PullHook,
-  Toolbar,
-  ToolbarButton,
-} from 'react-onsenui';
+  WindowScroller,
+} from 'react-virtualized';
 import createPage from '../../utils/createPage';
-import htmlToText from '../../utils/htmlToText';
 import TopicFeeds from '../../models/TopicFeeds';
-import classes from './Home.module.scss';
+import TopicItem from '../../components/TopicItem';
 
 class Home extends PureComponent {
   constructor(props) {
     super(props);
 
     this.state = {
+      mounted: false,
       pullHookState: 'initial',
     };
+    this.page = createRef();
+    this.pageContentEle = null;
+    this.cache = new CellMeasurerCache({
+      fixedWidth: true,
+      fixedHeight: false,
+    });
+  }
+
+  componentDidMount() {
+    const pageEle = findDOMNode(this.page.current);
+    if (pageEle) {
+      const pageContentEle = pageEle.querySelector('.page__content');
+      this.pageContentEle = pageContentEle;
+    }
+    this.setState({ mounted: true });
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -48,35 +62,52 @@ class Home extends PureComponent {
     this.props.onRefresh();
   };
 
-  onLoadMore = done => {
-    this.loadMoreDone = done;
+  onLoadMore = () => {
     this.props.onLoadMore();
+    return new Promise(resolve => {
+      this.loadMoreDone = resolve;
+    });
   };
 
-  renderTopic = (topic, index) => {
+  isRowLoaded = ({ index }) => {
+    const count = this.props.topics ? this.props.topics.length : 0;
+    return index < count;
+  };
+
+  renderTopic = ({ key, index, parent, style }) => {
+    const topic = this.props.topics[index];
+    if (!topic) {
+      return index > 0 ? <div key={key}>加载中...</div> : null;
+    }
     return (
-      <Card
-        key={topic.id}
-        onClick={() =>
-          this.props.navigator.pushPage({
-            path: '/topic',
-            passProps: { id: topic.id },
-          })
-        }
+      <CellMeasurer
+        key={key}
+        cache={this.cache}
+        columnIndex={0}
+        parent={parent}
+        rowIndex={index}
       >
-        <div className="title">{topic.title}</div>
-        <div className={classNames('content', classes.topicFeedsItemContent)}>
-          {htmlToText(topic.content)}
+        <div style={style}>
+          <TopicItem
+            onClick={() =>
+              this.props.navigator.pushPage({
+                path: '/topic',
+                passProps: { id: topic.id },
+              })
+            }
+            topic={topic}
+          />
         </div>
-      </Card>
+      </CellMeasurer>
     );
   };
 
   render() {
     const { topics } = this.props;
-    const { pullHookState } = this.state;
+    const { mounted, pullHookState } = this.state;
     return (
       <Page
+        ref={this.page}
         renderToolbar={() => (
           <Toolbar>
             <div className="left">
@@ -87,7 +118,6 @@ class Home extends PureComponent {
             <div className="center">CNode 社区</div>
           </Toolbar>
         )}
-        onInfiniteScroll={this.onLoadMore}
       >
         <PullHook onChange={this.onPullHookChange} onLoad={this.onRefresh}>
           {pullHookState === 'initial' ? (
@@ -107,7 +137,41 @@ class Home extends PureComponent {
             </span>
           )}
         </PullHook>
-        <List dataSource={topics || []} renderRow={this.renderTopic} />
+        {mounted ? (
+          <WindowScroller scrollElement={this.pageContentEle}>
+            {({ height, width, isScrolling, registerChild, scrollTop }) => {
+              if (!height || !width) {
+                return null;
+              }
+              const rowCount = topics ? topics.length + 1 : 0;
+              return (
+                <div ref={registerChild}>
+                  <InfiniteLoader
+                    isRowLoaded={this.isRowLoaded}
+                    loadMoreRows={this.onLoadMore}
+                    rowCount={rowCount}
+                  >
+                    {props => (
+                      <List
+                        ref={props.registerChild}
+                        autoHeight
+                        deferredMeasurementCache={this.cache}
+                        height={height}
+                        width={width}
+                        isScrolling={isScrolling}
+                        onRowsRendered={props.onRowsRendered}
+                        rowCount={rowCount}
+                        rowHeight={this.cache.rowHeight}
+                        rowRenderer={this.renderTopic}
+                        scrollTop={scrollTop}
+                      />
+                    )}
+                  </InfiniteLoader>
+                </div>
+              );
+            }}
+          </WindowScroller>
+        ) : null}
       </Page>
     );
   }

@@ -12,6 +12,7 @@
     "react-onsenui": "^1.11.1",
     "react-redux": "^5.1.1",
     "react-scripts": "2.1.1",
+    "react-virtualized": "^9.21.0",
     "redumd": "^1.1.0",
     "redux": "^4.0.1"
   },
