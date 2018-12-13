@@ -89,12 +89,7 @@ class Home extends PureComponent {
       >
         <div style={style}>
           <TopicItem
-            onClick={() =>
-              this.props.navigator.pushPage({
-                path: '/topic',
-                passProps: { id: topic.id },
-              })
-            }
+            onClick={() => this.props.navigator.pushPage(`/topic/${topic.id}`)}
             topic={topic}
           />
         </div>
