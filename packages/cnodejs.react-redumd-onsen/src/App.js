@@ -1,28 +1,24 @@
 import React, { PureComponent } from 'react';
-import { Navigator } from 'react-onsenui';
 import 'onsenui/css/onsenui.css';
 import 'onsenui/css/onsen-css-components.css';
+import RouterNavigator from './components/RouterNavigator';
 import Home from './pages/Home';
 import Topic from './pages/Topic';
 
-const INITIAL_ROUTE = { path: '/' };
+const ROUTES = [
+  {
+    path: '/',
+    component: Home,
+  },
+  {
+    path: '/topic/:id',
+    component: Topic,
+  },
+];
 
 class App extends PureComponent {
-  handleClick = () => {};
-
-  renderPage = ({ path, passProps = {} }, navigator) => {
-    if (path === '/') {
-      return <Home {...passProps} key={path} navigator={navigator} />;
-    } else if (path === '/topic') {
-      return <Topic {...passProps} key={path} navigator={navigator} />;
-    }
-    return null;
-  };
-
   render() {
-    return (
-      <Navigator renderPage={this.renderPage} initialRoute={INITIAL_ROUTE} />
-    );
+    return <RouterNavigator routes={ROUTES} />;
   }
 }
 
