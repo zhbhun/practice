@@ -18,6 +18,7 @@
     "react-virtualized": "^9.21.0",
     "redumd": "^1.1.0",
     "redux": "^4.0.1",
+    "timeago.js": "^3.0.2",
     "url": "^0.11.0"
   },
   "scripts": {

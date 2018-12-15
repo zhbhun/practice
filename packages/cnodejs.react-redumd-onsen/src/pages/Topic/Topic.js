@@ -9,17 +9,36 @@ import {
   Toolbar,
 } from 'react-onsenui';
 import createPage from '../../utils/createPage';
+import timeago from '../../utils/timeago';
 import * as models from '../../models';
+import Avatar from '../../common/Avatar';
 import classes from './Topic.module.scss';
 
 class Topic extends PureComponent {
   renderTopic(topic) {
-    if (!topic) {
+    if (!topic || !topic.author) {
       return null;
     }
+    const { author } = topic;
     return (
       <Card className={classes.topic}>
         <div className="title">{topic.title}</div>
+        <div className={classes.author}>
+          <Avatar
+            className={classes.avatar}
+            source={author ? author.avatar_url : ''}
+          />
+          <div className={classes.anthorContent}>
+            <div className={classes.authorName}>
+              {author ? author.loginname : ''}
+            </div>
+            <div className={classes.publish}>
+              <span>{timeago(topic.create_at)}</span>
+              <span> • </span>
+              <span>{`${topic.visit_count}次浏览`}</span>
+            </div>
+          </div>
+        </div>
         <div
           className="content"
           dangerouslySetInnerHTML={{ __html: topic.content }}
