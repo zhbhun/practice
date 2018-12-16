@@ -1,6 +1,15 @@
 import React, { createRef, PureComponent } from 'react';
 import { findDOMNode } from 'react-dom';
-import { Icon, Page, PullHook, Toolbar, ToolbarButton } from 'react-onsenui';
+import {
+  Icon,
+  Page,
+  PullHook,
+  Splitter,
+  SplitterSide,
+  SplitterContent,
+  Toolbar,
+  ToolbarButton,
+} from 'react-onsenui';
 import {
   CellMeasurer,
   CellMeasurerCache,
@@ -11,6 +20,7 @@ import {
 import createPage from '../../utils/createPage';
 import TopicFeeds from '../../models/TopicFeeds';
 import TopicItem from '../../components/TopicItem';
+import Menu from './Menu';
 
 class Home extends PureComponent {
   constructor(props) {
@@ -18,6 +28,7 @@ class Home extends PureComponent {
 
     this.state = {
       mounted: false,
+      sidebarOpen: false,
       pullHookState: 'initial',
     };
     this.page = createRef();
@@ -74,6 +85,10 @@ class Home extends PureComponent {
     return index < count;
   };
 
+  openSidebar = () => this.setState({ sidebarOpen: true });
+
+  closeSidebar = () => this.setState({ sidebarOpen: false });
+
   renderTopic = ({ key, index, parent, style }) => {
     const topic = this.props.topics[index];
     if (!topic) {
@@ -97,7 +112,19 @@ class Home extends PureComponent {
     );
   };
 
-  render() {
+  renderSidebar = () => {
+    return (
+      <Page>
+        <Menu
+          onClick={tab => {
+            this.props.navigator.resetPage(`/?tab=${tab}`);
+          }}
+        />
+      </Page>
+    );
+  };
+
+  renderMain = () => {
     const { topics } = this.props;
     const { mounted, pullHookState } = this.state;
     return (
@@ -106,7 +133,7 @@ class Home extends PureComponent {
         renderToolbar={() => (
           <Toolbar>
             <div className="left">
-              <ToolbarButton>
+              <ToolbarButton onClick={this.openSidebar}>
                 <Icon icon="md-menu" />
               </ToolbarButton>
             </div>
@@ -169,6 +196,26 @@ class Home extends PureComponent {
         ) : null}
       </Page>
     );
+  };
+
+  render() {
+    return (
+      <Page>
+        <Splitter>
+          <SplitterSide
+            collapse
+            isOpen={this.state.sidebarOpen}
+            side="left"
+            swipeable
+            width={300}
+            onClose={this.closeSidebar}
+          >
+            {this.renderSidebar()}
+          </SplitterSide>
+          <SplitterContent>{this.renderMain()}</SplitterContent>
+        </Splitter>
+      </Page>
+    );
   }
 }
 
@@ -176,8 +223,11 @@ export default createPage({
   models: {
     topicFeeds: TopicFeeds,
   },
-  getInitialProps: ({ store, models: { topicFeeds } }) => {
-    store.dispatch(topicFeeds.actions.initiateIfNeed());
+  getInitialProps: ({ props, store, models: { topicFeeds } }) => {
+    const { match } = props;
+    const tab = match && match.query && match.query.tab ? match.query.tab : '';
+    console.log(tab, match);
+    store.dispatch(topicFeeds.actions.initiateIfNeed(tab));
   },
   mapStateToProps: (state, { models: { topicFeeds } }) => {
     const initiate = topicFeeds.getInitiate(state);
