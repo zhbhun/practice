@@ -165,13 +165,15 @@ class Home extends PureComponent {
               if (!height || !width) {
                 return null;
               }
-              const rowCount = topics ? topics.length + 1 : 0;
+              const rowCount =
+                topics && topics.length > 0 ? topics.length + 1 : 0;
               return (
                 <div ref={registerChild}>
                   <InfiniteLoader
                     isRowLoaded={this.isRowLoaded}
                     loadMoreRows={this.onLoadMore}
                     rowCount={rowCount}
+                    threshold={3}
                   >
                     {props => (
                       <List
@@ -181,7 +183,17 @@ class Home extends PureComponent {
                         height={height}
                         width={width}
                         isScrolling={isScrolling}
-                        onRowsRendered={props.onRowsRendered}
+                        onRowsRendered={({ startIndex, stopIndex }) => {
+                          // List 第一次会渲染所有数据, 导致每次都会自动加载第二页数据
+                          if (
+                            stopIndex === 0 ||
+                            stopIndex - startIndex === rowCount - 1
+                          ) {
+                            return;
+                          }
+                          props.onRowsRendered({ startIndex, stopIndex });
+                        }}
+                        overscanRowCount={6}
                         rowCount={rowCount}
                         rowHeight={this.cache.rowHeight}
                         rowRenderer={this.renderTopic}
@@ -226,7 +238,6 @@ export default createPage({
   getInitialProps: ({ props, store, models: { topicFeeds } }) => {
     const { match } = props;
     const tab = match && match.query && match.query.tab ? match.query.tab : '';
-    console.log(tab, match);
     store.dispatch(topicFeeds.actions.initiateIfNeed(tab));
   },
   mapStateToProps: (state, { models: { topicFeeds } }) => {
