@@ -1,16 +1,11 @@
 {
-  "main.css": "/practice/cnodejs/react-redumd-onsen/static/css/main.1a89f87e.chunk.css",
-  "main.js": "/practice/cnodejs/react-redumd-onsen/static/js/main.48a87e7c.chunk.js",
-  "main.js.map": "/practice/cnodejs/react-redumd-onsen/static/js/main.48a87e7c.chunk.js.map",
-  "static/css/1.13c8c091.chunk.css": "/practice/cnodejs/react-redumd-onsen/static/css/1.13c8c091.chunk.css",
-  "static/js/1.f967ea10.chunk.js": "/practice/cnodejs/react-redumd-onsen/static/js/1.f967ea10.chunk.js",
-  "static/js/1.f967ea10.chunk.js.map": "/practice/cnodejs/react-redumd-onsen/static/js/1.f967ea10.chunk.js.map",
+  "main.css": "/practice/cnodejs/react-redumd-onsen/static/css/main.3acd0774.chunk.css",
+  "main.js": "/practice/cnodejs/react-redumd-onsen/static/js/main.858fc73f.chunk.js",
+  "static/css/1.633c8364.chunk.css": "/practice/cnodejs/react-redumd-onsen/static/css/1.633c8364.chunk.css",
+  "static/js/1.d29f0d60.chunk.js": "/practice/cnodejs/react-redumd-onsen/static/js/1.d29f0d60.chunk.js",
   "runtime~main.js": "/practice/cnodejs/react-redumd-onsen/static/js/runtime~main.da605f66.js",
-  "runtime~main.js.map": "/practice/cnodejs/react-redumd-onsen/static/js/runtime~main.da605f66.js.map",
-  "static/media/onsenui.css": "/practice/cnodejs/react-redumd-onsen/static/media/ionicons.19e65b89.eot",
-  "static/css/main.1a89f87e.chunk.css.map": "/practice/cnodejs/react-redumd-onsen/static/css/main.1a89f87e.chunk.css.map",
-  "static/css/1.13c8c091.chunk.css.map": "/practice/cnodejs/react-redumd-onsen/static/css/1.13c8c091.chunk.css.map",
+  "static/media/onsenui.css": "/practice/cnodejs/react-redumd-onsen/static/media/fa-solid-900.de1d242d.svg",
   "index.html": "/practice/cnodejs/react-redumd-onsen/index.html",
-  "precache-manifest.31986a0e0682df1e5fd5a926f9cd1c7a.js": "/practice/cnodejs/react-redumd-onsen/precache-manifest.31986a0e0682df1e5fd5a926f9cd1c7a.js",
+  "precache-manifest.dd8c58523f0394e1d10ad27ec67615a2.js": "/practice/cnodejs/react-redumd-onsen/precache-manifest.dd8c58523f0394e1d10ad27ec67615a2.js",
   "service-worker.js": "/practice/cnodejs/react-redumd-onsen/service-worker.js"
 }
