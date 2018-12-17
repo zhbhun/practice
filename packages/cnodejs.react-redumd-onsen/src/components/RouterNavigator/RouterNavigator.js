@@ -19,7 +19,7 @@ const getInitialRouteStack = rootRoute => {
       { path: `${history.location.pathname}${history.location.search}` },
     ];
   }
-  return [{ path: '/' }];
+  return [{ path: `${history.location.pathname}${history.location.search}` }];
 };
 
 class RouterNavigator extends PureComponent {
@@ -74,6 +74,18 @@ class RouterNavigator extends PureComponent {
     history.push(nextURL);
   };
 
+  resetPage = (path, options) => {
+    const replaceIndex = getCurrRouteIndex();
+    let replaceURl;
+    if (path.indexOf('?') >= 0) {
+      replaceURl = `${path}&_=${replaceIndex}`;
+    } else {
+      replaceURl = `${path}?_=${replaceIndex}`;
+    }
+    this.navigator.current.resetPage({ path: replaceURl }, options);
+    history.replace(replaceURl);
+  };
+
   handleHistoryChange = (location, action) => {
     if (action === 'POP') {
       const lastIndex = getRouteIndex(this.lastLocation);
@@ -106,9 +118,12 @@ class RouterNavigator extends PureComponent {
       return false;
     });
     if (Component) {
+      const { query } = url.parse(path, true);
+      match.query = query;
       return (
         <Component
           key={path}
+          index={match._ || 0}
           history={history}
           location={history.location}
           match={match}

@@ -1,3 +1,53 @@
 .topic {
   margin: 0;
 }
+
+.author {
+  display: flex;
+  margin: 0 0 10px 0;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  color: #999;
+}
+
+.avatar {
+  width: 36px;
+  height: 36px;
+}
+
+.anthorContent {
+  display: flex;
+  margin-left: 10px;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.publish {
+  font-size: 10px;
+}
+
+.replyAuthor {
+  display: flex;
+  margin: 0 0 10px 0;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  color: #999;
+}
+
+.replyAvatar {
+  width: 36px;
+  height: 36px;
+}
+
+.replyAuthorContent {
+  display: flex;
+  margin-left: 10px;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.replyTime {
+  font-size: 10px;
+}

@@ -9,17 +9,36 @@ import {
   Toolbar,
 } from 'react-onsenui';
 import createPage from '../../utils/createPage';
+import timeago from '../../utils/timeago';
 import * as models from '../../models';
+import Avatar from '../../common/Avatar';
 import classes from './Topic.module.scss';
 
 class Topic extends PureComponent {
   renderTopic(topic) {
-    if (!topic) {
+    if (!topic || !topic.author) {
       return null;
     }
+    const { author } = topic;
     return (
       <Card className={classes.topic}>
         <div className="title">{topic.title}</div>
+        <div className={classes.author}>
+          <Avatar
+            className={classes.avatar}
+            source={author ? author.avatar_url : ''}
+          />
+          <div className={classes.anthorContent}>
+            <div className={classes.authorName}>
+              {author ? author.loginname : ''}
+            </div>
+            <div className={classes.publish}>
+              <span>{timeago(topic.create_at)}</span>
+              <span> • </span>
+              <span>{`${topic.visit_count}次浏览`}</span>
+            </div>
+          </div>
+        </div>
         <div
           className="content"
           dangerouslySetInnerHTML={{ __html: topic.content }}
@@ -37,6 +56,20 @@ class Topic extends PureComponent {
           renderRow={(reply, index) => {
             return (
               <ListItem key={reply.id}>
+                <div className={classes.replyAuthor}>
+                  <Avatar
+                    className={classes.replyAvatar}
+                    source={reply.author ? reply.author.avatar_url : ''}
+                  />
+                  <div className={classes.replyAuthorContent}>
+                    <div className={classes.replyAuthorName}>
+                      {reply.author ? reply.author.loginname : ''}
+                    </div>
+                    <div className={classes.replyTime}>
+                      <span>{timeago(reply.create_at)}</span>
+                    </div>
+                  </div>
+                </div>
                 <div dangerouslySetInnerHTML={{ __html: reply.content }} />
               </ListItem>
             );
@@ -59,8 +92,10 @@ class Topic extends PureComponent {
           </Toolbar>
         )}
       >
-        {topic ? this.renderTopic(topic) : null}
-        {topic && topic.replies ? this.renderReplies(topic.replies) : null}
+        {topic && topic.id ? this.renderTopic(topic) : null}
+        {topic && topic.replies && topic.replies.length > 0
+          ? this.renderReplies(topic.replies)
+          : null}
       </Page>
     );
   }

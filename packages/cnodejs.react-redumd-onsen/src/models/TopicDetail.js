@@ -27,6 +27,9 @@ class TopicDetail extends DetailPage {
         author: articleEntity
           ? schemas.author.getEntity(entitiesState, articleEntity.author)
           : null,
+        replies: ((articleEntity && articleEntity.replies) || []).map(replyId =>
+          schemas.reply.getEntity(entitiesState, replyId)
+        ),
       };
     };
   }

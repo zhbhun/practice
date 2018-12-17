@@ -5,8 +5,8 @@ import { topic } from '../schemas';
 class TopicFeeds extends ListPage {
   constructor(namespace = '') {
     super(`TopicFeeds/${namespace}`, {
-      api: page => {
-        return api.loadTopicList('', page, 15).then(data => {
+      api: (page, tab = '') => {
+        return api.loadTopicList(tab, page, 15).then(data => {
           return {
             data: data.map(item => {
               const { author, author_id, ...topicItem } = item;
