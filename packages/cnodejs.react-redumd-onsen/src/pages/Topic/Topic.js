@@ -56,6 +56,20 @@ class Topic extends PureComponent {
           renderRow={(reply, index) => {
             return (
               <ListItem key={reply.id}>
+                <div className={classes.replyAuthor}>
+                  <Avatar
+                    className={classes.replyAvatar}
+                    source={reply.author ? reply.author.avatar_url : ''}
+                  />
+                  <div className={classes.replyAuthorContent}>
+                    <div className={classes.replyAuthorName}>
+                      {reply.author ? reply.author.loginname : ''}
+                    </div>
+                    <div className={classes.replyTime}>
+                      <span>{timeago(reply.create_at)}</span>
+                    </div>
+                  </div>
+                </div>
                 <div dangerouslySetInnerHTML={{ __html: reply.content }} />
               </ListItem>
             );
@@ -78,8 +92,10 @@ class Topic extends PureComponent {
           </Toolbar>
         )}
       >
-        {topic ? this.renderTopic(topic) : null}
-        {topic && topic.replies ? this.renderReplies(topic.replies) : null}
+        {topic && topic.id ? this.renderTopic(topic) : null}
+        {topic && topic.replies && topic.replies.length > 0
+          ? this.renderReplies(topic.replies)
+          : null}
       </Page>
     );
   }
