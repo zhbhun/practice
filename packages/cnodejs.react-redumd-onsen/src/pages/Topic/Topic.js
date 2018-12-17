@@ -56,21 +56,26 @@ class Topic extends PureComponent {
           renderRow={(reply, index) => {
             return (
               <ListItem key={reply.id}>
-                <div className={classes.replyAuthor}>
-                  <Avatar
-                    className={classes.replyAvatar}
-                    source={reply.author ? reply.author.avatar_url : ''}
-                  />
-                  <div className={classes.replyAuthorContent}>
-                    <div className={classes.replyAuthorName}>
-                      {reply.author ? reply.author.loginname : ''}
-                    </div>
-                    <div className={classes.replyTime}>
-                      <span>{timeago(reply.create_at)}</span>
+                <div>
+                  <div className={classes.replyAuthor}>
+                    <Avatar
+                      className={classes.replyAvatar}
+                      source={reply.author ? reply.author.avatar_url : ''}
+                    />
+                    <div className={classes.replyAuthorContent}>
+                      <div className={classes.replyAuthorName}>
+                        {reply.author ? reply.author.loginname : ''}
+                      </div>
+                      <div className={classes.replyTime}>
+                        <span>{timeago(reply.create_at)}</span>
+                      </div>
                     </div>
                   </div>
+                  <div
+                    className={classes.replyContent}
+                    dangerouslySetInnerHTML={{ __html: reply.content }}
+                  />
                 </div>
-                <div dangerouslySetInnerHTML={{ __html: reply.content }} />
               </ListItem>
             );
           }}
