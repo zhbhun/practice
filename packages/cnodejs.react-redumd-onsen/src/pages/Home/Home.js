@@ -173,7 +173,7 @@ class Home extends PureComponent {
                     isRowLoaded={this.isRowLoaded}
                     loadMoreRows={this.onLoadMore}
                     rowCount={rowCount}
-                    threshold={3}
+                    threshold={6}
                   >
                     {props => (
                       <List
@@ -193,7 +193,7 @@ class Home extends PureComponent {
                           }
                           props.onRowsRendered({ startIndex, stopIndex });
                         }}
-                        overscanRowCount={6}
+                        overscanRowCount={9}
                         rowCount={rowCount}
                         rowHeight={this.cache.rowHeight}
                         rowRenderer={this.renderTopic}
