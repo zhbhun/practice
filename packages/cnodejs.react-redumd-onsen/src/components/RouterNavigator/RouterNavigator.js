@@ -82,8 +82,12 @@ class RouterNavigator extends PureComponent {
     } else {
       replaceURl = `${path}?_=${replaceIndex}`;
     }
-    this.navigator.current.resetPage({ path: replaceURl }, options);
-    history.replace(replaceURl);
+    if (
+      replaceURl !== `${history.location.pathname}${history.location.search}`
+    ) {
+      this.navigator.current.resetPage({ path: replaceURl }, options);
+      history.replace(replaceURl);
+    }
   };
 
   handleHistoryChange = (location, action) => {
