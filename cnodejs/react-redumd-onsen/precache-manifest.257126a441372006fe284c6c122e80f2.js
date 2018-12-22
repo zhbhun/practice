@@ -1,10 +1,10 @@
 self.__precacheManifest = [
   {
-    "revision": "6814d0e8136d34e313623eb7129d538e",
-    "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-brands-400.6814d0e8.woff2"
+    "revision": "8d9ab84bfe87a3f77112a6698cf639fb",
+    "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-regular-400.8d9ab84b.woff2"
   },
   {
-    "revision": "858fc73faf09dd926e88",
+    "revision": "afc0b3fc8124e79cdfef",
     "url": "/practice/cnodejs/react-redumd-onsen/static/css/main.3acd0774.chunk.css"
   },
   {
@@ -28,36 +28,24 @@ self.__precacheManifest = [
     "url": "/practice/cnodejs/react-redumd-onsen/static/media/ionicons.2c159d0d.woff"
   },
   {
-    "revision": "a4d31128b633bc0b1cc1f18a34fb3851",
-    "url": "/practice/cnodejs/react-redumd-onsen/static/media/Material-Design-Iconic-Font.a4d31128.woff2"
-  },
-  {
     "revision": "dd4781d1acc57ba4c4808d1b44301201",
     "url": "/practice/cnodejs/react-redumd-onsen/static/media/ionicons.dd4781d1.ttf"
-  },
-  {
-    "revision": "d2a55d331bdd1a7ea97a8a1fbb3c569c",
-    "url": "/practice/cnodejs/react-redumd-onsen/static/media/Material-Design-Iconic-Font.d2a55d33.woff"
-  },
-  {
-    "revision": "b351bd62abcd96e924d9f44a3da169a7",
-    "url": "/practice/cnodejs/react-redumd-onsen/static/media/Material-Design-Iconic-Font.b351bd62.ttf"
-  },
-  {
-    "revision": "aff28a207631f39ee0272d5cdde43ee7",
-    "url": "/practice/cnodejs/react-redumd-onsen/static/media/ionicons.aff28a20.svg"
   },
   {
     "revision": "e8019d507e8cb51d169ab4f94a0cda12",
     "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-brands-400.e8019d50.eot"
   },
   {
+    "revision": "6814d0e8136d34e313623eb7129d538e",
+    "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-brands-400.6814d0e8.woff2"
+  },
+  {
     "revision": "da408238128b876cbda6424391f1566f",
     "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-brands-400.da408238.woff"
   },
   {
-    "revision": "858fc73faf09dd926e88",
-    "url": "/practice/cnodejs/react-redumd-onsen/static/js/main.858fc73f.chunk.js"
+    "revision": "aff28a207631f39ee0272d5cdde43ee7",
+    "url": "/practice/cnodejs/react-redumd-onsen/static/media/ionicons.aff28a20.svg"
   },
   {
     "revision": "fdf44bc43e8fa2358bbb7d9165d78455",
@@ -68,8 +56,8 @@ self.__precacheManifest = [
     "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-regular-400.e6c93cb4.eot"
   },
   {
-    "revision": "8d9ab84bfe87a3f77112a6698cf639fb",
-    "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-regular-400.8d9ab84b.woff2"
+    "revision": "afc0b3fc8124e79cdfef",
+    "url": "/practice/cnodejs/react-redumd-onsen/static/js/main.afc0b3fc.chunk.js"
   },
   {
     "revision": "dad90637f797356bbc70d2664832e0b6",
@@ -92,23 +80,35 @@ self.__precacheManifest = [
     "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-solid-900.b75b4bfe.woff2"
   },
   {
+    "revision": "ea363ed422723673917901680be9b37c",
+    "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-solid-900.ea363ed4.eot"
+  },
+  {
     "revision": "2d0415fa29ea596b7a02c78eddeede20",
     "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-solid-900.2d0415fa.woff"
   },
   {
-    "revision": "ea363ed422723673917901680be9b37c",
-    "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-solid-900.ea363ed4.eot"
+    "revision": "a4d31128b633bc0b1cc1f18a34fb3851",
+    "url": "/practice/cnodejs/react-redumd-onsen/static/media/Material-Design-Iconic-Font.a4d31128.woff2"
+  },
+  {
+    "revision": "d2a55d331bdd1a7ea97a8a1fbb3c569c",
+    "url": "/practice/cnodejs/react-redumd-onsen/static/media/Material-Design-Iconic-Font.d2a55d33.woff"
   },
   {
     "revision": "132e9759d93e4eefd7cdde0d7a322991",
     "url": "/practice/cnodejs/react-redumd-onsen/static/media/fa-solid-900.132e9759.ttf"
   },
   {
+    "revision": "b351bd62abcd96e924d9f44a3da169a7",
+    "url": "/practice/cnodejs/react-redumd-onsen/static/media/Material-Design-Iconic-Font.b351bd62.ttf"
+  },
+  {
     "revision": "d29f0d604eaa70810029",
     "url": "/practice/cnodejs/react-redumd-onsen/static/css/1.633c8364.chunk.css"
   },
   {
-    "revision": "f72bfa8d890af437813dcf1974344882",
+    "revision": "ad35b460b3e65450a6b74b560c4efd58",
     "url": "/practice/cnodejs/react-redumd-onsen/index.html"
   }
 ];
