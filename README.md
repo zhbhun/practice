@@ -8,6 +8,7 @@ CNodejs
 - https://github.com/cnodejs/egg-cnode
 - https://github.com/lzxb/vue-cnode
 - https://github.com/lzxb/react-cnode
+- https://github.com/lanceli/cnodejs-ionic
 
 ## 功能
 
