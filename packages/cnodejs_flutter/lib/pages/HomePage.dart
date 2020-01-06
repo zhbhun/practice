@@ -14,6 +14,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
+  String _tab = ''; // 全部;good|精华;share|分享;ask|问答;job|招聘
   int _page = 1;
   bool _loading = false;
   List<Topic> _data;
@@ -38,7 +39,7 @@ class _HomePageState extends State<HomePage> {
     try {
       var response = await http.get(
         Uri.encodeFull(
-            'https://cnodejs.org/api/v1/topics?mdrender=false&page=$page&limit=15'),
+            'https://cnodejs.org/api/v1/topics?mdrender=false&tab=${this._tab}&page=$page&limit=15'),
         headers: {'Accept': 'application/json'},
       );
       var responseJSON = json.decode(response.body);
@@ -82,6 +83,16 @@ class _HomePageState extends State<HomePage> {
       if (!_loading) {
         await this._loadData(page: _page + 1);
       }
+    });
+  }
+
+  void _changeTab(String tab) {
+    setState(() {
+      this._tab = tab;
+      this._page = 1;
+      this._loading = false;
+      this._data = [];
+      _refreshKey.currentState.show();
     });
   }
 
@@ -186,6 +197,103 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text('CNode 社区'),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10),
+                    child: ClipOval(
+                      child: Image.asset(
+                        'assets/images/pic_placeholder.png',
+                        width: 70,
+                        height: 70,
+                      ),
+                    ),
+                  ),
+                  Text(
+                    '点击头像登录',
+                    style: TextStyle(color: Colors.white, fontSize: 16),
+                  ),
+                ],
+              ),
+              decoration: BoxDecoration(
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage('assets/images/bg_drawer_header.png'),
+                ),
+              ),
+            ),
+            ListTile(
+              selected: this._tab == '',
+              leading: Icon(Icons.all_inclusive),
+              title: Text('全部'),
+              onTap: () {
+                this._changeTab('');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              selected: this._tab == 'good',
+              leading: Icon(Icons.thumb_up),
+              title: Text('精华'),
+              onTap: () {
+                this._changeTab('good');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              selected: this._tab == 'share',
+              leading: Icon(Icons.share),
+              title: Text('分享'),
+              onTap: () {
+                this._changeTab('share');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              selected: this._tab == 'ask',
+              leading: Icon(Icons.question_answer),
+              title: Text('问答'),
+              onTap: () {
+                this._changeTab('ask');
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              selected: this._tab == 'job',
+              leading: Icon(Icons.work),
+              title: Text('招聘'),
+              onTap: () {
+                this._changeTab('job');
+                Navigator.pop(context);
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.message),
+              title: Text('消息'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('设置'),
+              onTap: () {},
+            ),
+            ListTile(
+              leading: Icon(Icons.info),
+              title: Text('关于'),
+              onTap: () {},
+            ),
+          ],
+        ),
       ),
       body: RefreshIndicator(
         key: _refreshKey,
