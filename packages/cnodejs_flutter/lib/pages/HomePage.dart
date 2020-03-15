@@ -1,8 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:cnodejs_flutter/entities/Author.dart';
 import 'package:cnodejs_flutter/entities/Topic.dart';
+import 'package:cnodejs_flutter/models/session.dart';
+import 'package:cnodejs_flutter/widgets/provider.dart';
 import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
 import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
 
@@ -203,41 +207,85 @@ class _HomePageState extends State<HomePage> {
           // Important: Remove any padding from the ListView.
           padding: EdgeInsets.zero,
           children: <Widget>[
-            DrawerHeader(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10),
-                    child: ClipOval(
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pushNamed(
-                            context,
-                            '/login',
-                          );
-                        },
-                        child: Image.asset(
-                          'assets/images/pic_placeholder.png',
-                          width: 70,
-                          height: 70,
+            Consumer<Session>(
+              builder: (context, session) {
+                var isLogin = session.isLogin;
+                var user = session.user;
+                return DrawerHeader(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: ClipOval(
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.pushNamed(
+                                context,
+                                '/login',
+                              );
+                            },
+                            child: isLogin
+                                ? Image.network(
+                                    user.avatarURL,
+                                    width: 70,
+                                    height: 70,
+                                  )
+                                : Image.asset(
+                                    'assets/images/pic_placeholder.png',
+                                    width: 70,
+                                    height: 70,
+                                  ),
+                          ),
                         ),
                       ),
+                      isLogin
+                          ? Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: <Widget>[
+                                Column(
+                                  children: <Widget>[
+                                    Text(
+                                      '${user.loginname}',
+                                      style: TextStyle(color: Colors.white),
+                                    ),
+                                    Text(
+                                      '积分：0',
+                                      style: TextStyle(
+                                        color: Colors.grey.shade300,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                GestureDetector(
+                                  onTap: () {
+                                    session.logout();
+                                  },
+                                  child: Text(
+                                    '注销',
+                                    style: TextStyle(
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            )
+                          : Text(
+                              '点击头像登录',
+                              style:
+                                  TextStyle(color: Colors.white, fontSize: 16),
+                            ),
+                    ],
+                  ),
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage('assets/images/bg_drawer_header.png'),
                     ),
                   ),
-                  Text(
-                    '点击头像登录',
-                    style: TextStyle(color: Colors.white, fontSize: 16),
-                  ),
-                ],
-              ),
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage('assets/images/bg_drawer_header.png'),
-                ),
-              ),
+                );
+              },
             ),
             ListTile(
               selected: this._tab == '',

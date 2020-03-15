@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:cnodejs_flutter/entities/Author.dart';
+import 'package:cnodejs_flutter/models/session.dart';
+import 'package:cnodejs_flutter/widgets/provider.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -90,7 +93,6 @@ class _LoginPageState extends State<LoginPage> {
                               } else if (this._isInvalidAsyncAccessToken) {
                                 return 'Access Token 验证错误';
                               }
-                              // TODO: 异步要怎么处理
                               return null;
                             },
                             onChanged: (value) {
@@ -102,35 +104,46 @@ class _LoginPageState extends State<LoginPage> {
                             padding: const EdgeInsets.symmetric(vertical: 16.0),
                             child: SizedBox(
                               width: double.infinity,
-                              child: RaisedButton(
-                                color: Theme.of(context).accentColor,
-                                textColor: Colors.white,
-                                onPressed: () async {
-                                  // Validate will return true if the form is valid, or false if
-                                  // the form is invalid.
-                                  if (this._formKey.currentState.validate()) {
-                                    this.setState(() {
-                                      this._isSubmitting = true;
-                                    });
-                                    var response = await this
-                                        ._checkAccessToken(this._accessToken);
-                                    if (response['success'] == false) {
-                                      _isInvalidAsyncAccessToken = true;
-                                      this._formKey.currentState.validate();
-                                      this.setState(() {
-                                        this._isSubmitting = false;
-                                      });
-                                    } else {
-                                      this.setState(() {
-                                        this._isSubmitting = false;
-                                      });
-                                      // TODO
-                                      print('123');
-                                    }
-                                  }
+                              child: Consumer<Session>(
+                                builder: (context, session) {
+                                  return RaisedButton(
+                                    color: Theme.of(context).accentColor,
+                                    textColor: Colors.white,
+                                    onPressed: () async {
+                                      // Validate will return true if the form is valid, or false if
+                                      // the form is invalid.
+                                      if (this
+                                          ._formKey
+                                          .currentState
+                                          .validate()) {
+                                        this.setState(() {
+                                          this._isSubmitting = true;
+                                        });
+                                        var response = await this
+                                            ._checkAccessToken(
+                                                this._accessToken);
+                                        if (response['success'] == false) {
+                                          _isInvalidAsyncAccessToken = true;
+                                          this._formKey.currentState.validate();
+                                          this.setState(() {
+                                            this._isSubmitting = false;
+                                          });
+                                        } else {
+                                          this.setState(() {
+                                            this._isSubmitting = false;
+                                          });
+                                          session.login(
+                                            user: Author.fromJson(response),
+                                            accessToken: this._accessToken,
+                                          );
+                                          Navigator.of(context).pop();
+                                        }
+                                      }
+                                    },
+                                    child: Text(
+                                        this._isSubmitting ? '登录中...' : '登录'),
+                                  );
                                 },
-                                child:
-                                    Text(this._isSubmitting ? '登录中...' : '登录'),
                               ),
                             ),
                           ),
