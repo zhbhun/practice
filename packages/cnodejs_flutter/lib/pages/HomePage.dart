@@ -359,6 +359,37 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: this.buildListItem,
         ),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          showDialog<void>(
+            context: context,
+            barrierDismissible: false, // user must tap button!
+            builder: (BuildContext context) {
+              return AlertDialog(
+                content: SingleChildScrollView(
+                  child: Text(
+                      '该操作需要登录账户，是否现在登录？'),
+                ),
+                actions: <Widget>[
+                  FlatButton(
+                    child: Text('取消'),
+                    onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                  ),FlatButton(
+                    child: Text('确定'),
+                    onPressed: () {
+                      // TODO
+                      Navigator.of(context).pop();
+                    },
+                  ),
+                ],
+              );
+            },
+          );
+        },
+        child: Icon(Icons.edit),
+      ),
     );
   }
 }
