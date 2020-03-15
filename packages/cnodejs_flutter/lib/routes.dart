@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'pages/HomePage.dart';
-import 'pages/TopicDetailPage.dart';
-import 'pages/AuthorDetailPage.dart';
-import 'pages/LoginPage.dart';
+import 'package:cnodejs_flutter/pages/HomePage.dart';
+import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
+import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
+import 'package:cnodejs_flutter/pages/LoginPage.dart';
 
 typedef _WidgetBuilder<W, A> = W Function(BuildContext context, A arguments);
 

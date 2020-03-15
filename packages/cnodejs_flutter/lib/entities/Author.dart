@@ -1,5 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
-import './Topic.dart';
+import 'package:cnodejs_flutter/entities/Topic.dart';
 
 part 'Author.g.dart';
 

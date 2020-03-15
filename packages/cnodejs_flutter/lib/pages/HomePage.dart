@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cnodejs_flutter/entities/Topic.dart';
-import './TopicDetailPage.dart';
-import './AuthorDetailPage.dart';
+import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
+import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
 
 class HomePage extends StatefulWidget {
   @override

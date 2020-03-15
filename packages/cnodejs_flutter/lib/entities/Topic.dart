@@ -1,6 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
-import './Author.dart';
-import './Reply.dart';
+import 'package:cnodejs_flutter/entities/Author.dart';
+import 'package:cnodejs_flutter/entities/Reply.dart';
 
 part 'Topic.g.dart';
 
