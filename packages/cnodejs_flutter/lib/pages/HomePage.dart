@@ -211,10 +211,18 @@ class _HomePageState extends State<HomePage> {
                   Container(
                     margin: EdgeInsets.only(bottom: 10),
                     child: ClipOval(
-                      child: Image.asset(
-                        'assets/images/pic_placeholder.png',
-                        width: 70,
-                        height: 70,
+                      child: GestureDetector(
+                        onTap: () {
+                          Navigator.pushNamed(
+                            context,
+                            '/login',
+                          );
+                        },
+                        child: Image.asset(
+                          'assets/images/pic_placeholder.png',
+                          width: 70,
+                          height: 70,
+                        ),
                       ),
                     ),
                   ),

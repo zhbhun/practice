@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import './pages/HomePage.dart';
-import './pages/TopicDetailPage.dart';
-import './pages/AuthorDetailPage.dart';
+import 'pages/HomePage.dart';
+import 'pages/TopicDetailPage.dart';
+import 'pages/AuthorDetailPage.dart';
+import 'pages/LoginPage.dart';
 
 typedef _WidgetBuilder<W, A> = W Function(BuildContext context, A arguments);
 
@@ -24,7 +25,11 @@ final _routes = [
   _Route<AuthorDetailPage, Object>(
     name: '/author',
     builder: (context, arguments) => AuthorDetailPage(arguments),
-  )
+  ),
+  _Route<LoginPage, Object>(
+    name: '/login',
+    builder: (context, arguments) => LoginPage(),
+  ),
 ];
 
 Widget routes(BuildContext context, RouteSettings settings) {
