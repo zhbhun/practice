@@ -3,6 +3,7 @@ import 'package:cnodejs_flutter/pages/HomePage.dart';
 import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
 import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
 import 'package:cnodejs_flutter/pages/LoginPage.dart';
+import 'package:cnodejs_flutter/pages/message_list_page.dart';
 
 typedef _WidgetBuilder<W, A> = W Function(BuildContext context, A arguments);
 
@@ -29,6 +30,10 @@ final _routes = [
   _Route<LoginPage, Object>(
     name: '/login',
     builder: (context, arguments) => LoginPage(),
+  ),
+  _Route<MessageListPage, Object>(
+    name: '/messages',
+    builder: (context, arguments) => MessageListPage(),
   ),
 ];
 

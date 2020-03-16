@@ -195,6 +195,164 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
+  Widget buildDrawerHeader() {
+    return Consumer<Session>(
+      builder: (context, session) {
+        var isLogin = session.isLogin;
+        var user = session.user;
+        return DrawerHeader(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(bottom: 10),
+                child: ClipOval(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(
+                        context,
+                        '/login',
+                      );
+                    },
+                    child: isLogin
+                        ? Image.network(
+                            user.avatarURL,
+                            width: 70,
+                            height: 70,
+                          )
+                        : Image.asset(
+                            'assets/images/pic_placeholder.png',
+                            width: 70,
+                            height: 70,
+                          ),
+                  ),
+                ),
+              ),
+              isLogin
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: <Widget>[
+                        Column(
+                          children: <Widget>[
+                            Text(
+                              '${user.loginname}',
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            Text(
+                              '积分：0',
+                              style: TextStyle(
+                                color: Colors.grey.shade300,
+                              ),
+                            ),
+                          ],
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            session.logout();
+                          },
+                          child: Text(
+                            '注销',
+                            style: TextStyle(
+                              color: Colors.grey.shade300,
+                            ),
+                          ),
+                        ),
+                      ],
+                    )
+                  : Text(
+                      '点击头像登录',
+                      style: TextStyle(color: Colors.white, fontSize: 16),
+                    ),
+            ],
+          ),
+          decoration: BoxDecoration(
+            image: DecorationImage(
+              fit: BoxFit.cover,
+              image: AssetImage('assets/images/bg_drawer_header.png'),
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  Widget buildDrawer() {
+    return Drawer(
+      child: ListView(
+        // Important: Remove any padding from the ListView.
+        padding: EdgeInsets.zero,
+        children: <Widget>[
+          this.buildDrawerHeader(),
+          ListTile(
+            selected: this._tab == '',
+            leading: Icon(Icons.all_inclusive),
+            title: Text('全部'),
+            onTap: () {
+              this._changeTab('');
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            selected: this._tab == 'good',
+            leading: Icon(Icons.thumb_up),
+            title: Text('精华'),
+            onTap: () {
+              this._changeTab('good');
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            selected: this._tab == 'share',
+            leading: Icon(Icons.share),
+            title: Text('分享'),
+            onTap: () {
+              this._changeTab('share');
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            selected: this._tab == 'ask',
+            leading: Icon(Icons.question_answer),
+            title: Text('问答'),
+            onTap: () {
+              this._changeTab('ask');
+              Navigator.pop(context);
+            },
+          ),
+          ListTile(
+            selected: this._tab == 'job',
+            leading: Icon(Icons.work),
+            title: Text('招聘'),
+            onTap: () {
+              this._changeTab('job');
+              Navigator.pop(context);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.message),
+            title: Text('消息'),
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.pushNamed(context, '/messages');
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.settings),
+            title: Text('设置'),
+            onTap: () {},
+          ),
+          ListTile(
+            leading: Icon(Icons.info),
+            title: Text('关于'),
+            onTap: () {},
+          ),
+        ],
+      ),
+    );
+  }
+
   Widget buildFloatingActionButton() {
     return Consumer<Session>(
       builder: (context, session) {
@@ -247,155 +405,7 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         title: Text('CNode 社区'),
       ),
-      drawer: Drawer(
-        child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: <Widget>[
-            Consumer<Session>(
-              builder: (context, session) {
-                var isLogin = session.isLogin;
-                var user = session.user;
-                return DrawerHeader(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10),
-                        child: ClipOval(
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.pushNamed(
-                                context,
-                                '/login',
-                              );
-                            },
-                            child: isLogin
-                                ? Image.network(
-                                    user.avatarURL,
-                                    width: 70,
-                                    height: 70,
-                                  )
-                                : Image.asset(
-                                    'assets/images/pic_placeholder.png',
-                                    width: 70,
-                                    height: 70,
-                                  ),
-                          ),
-                        ),
-                      ),
-                      isLogin
-                          ? Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: <Widget>[
-                                Column(
-                                  children: <Widget>[
-                                    Text(
-                                      '${user.loginname}',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                    Text(
-                                      '积分：0',
-                                      style: TextStyle(
-                                        color: Colors.grey.shade300,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    session.logout();
-                                  },
-                                  child: Text(
-                                    '注销',
-                                    style: TextStyle(
-                                      color: Colors.grey.shade300,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            )
-                          : Text(
-                              '点击头像登录',
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 16),
-                            ),
-                    ],
-                  ),
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.cover,
-                      image: AssetImage('assets/images/bg_drawer_header.png'),
-                    ),
-                  ),
-                );
-              },
-            ),
-            ListTile(
-              selected: this._tab == '',
-              leading: Icon(Icons.all_inclusive),
-              title: Text('全部'),
-              onTap: () {
-                this._changeTab('');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              selected: this._tab == 'good',
-              leading: Icon(Icons.thumb_up),
-              title: Text('精华'),
-              onTap: () {
-                this._changeTab('good');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              selected: this._tab == 'share',
-              leading: Icon(Icons.share),
-              title: Text('分享'),
-              onTap: () {
-                this._changeTab('share');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              selected: this._tab == 'ask',
-              leading: Icon(Icons.question_answer),
-              title: Text('问答'),
-              onTap: () {
-                this._changeTab('ask');
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              selected: this._tab == 'job',
-              leading: Icon(Icons.work),
-              title: Text('招聘'),
-              onTap: () {
-                this._changeTab('job');
-                Navigator.pop(context);
-              },
-            ),
-            Divider(),
-            ListTile(
-              leading: Icon(Icons.message),
-              title: Text('消息'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.settings),
-              title: Text('设置'),
-              onTap: () {},
-            ),
-            ListTile(
-              leading: Icon(Icons.info),
-              title: Text('关于'),
-              onTap: () {},
-            ),
-          ],
-        ),
-      ),
+      drawer: this.buildDrawer(),
       body: RefreshIndicator(
         key: _refreshKey,
         onRefresh: _refresh,
