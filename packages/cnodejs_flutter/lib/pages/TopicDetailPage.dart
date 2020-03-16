@@ -26,6 +26,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   Topic _data;
+  bool _session;
 
   @override
   void initState() {
@@ -33,6 +34,17 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     Future.delayed(const Duration(microseconds: 0), () {
       _refreshKey.currentState.show();
     });
+    Session.getInstance().addListener(this._handleSessionChange);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Session.getInstance().removeListener(this._handleSessionChange);
+  }
+
+  void _handleSessionChange() {
+    _refreshKey.currentState.show();
   }
 
   Future<void> _loadData() async {
