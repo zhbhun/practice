@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:cnodejs_flutter/entities/Author.dart';
 import 'package:cnodejs_flutter/entities/Topic.dart';
 import 'package:cnodejs_flutter/models/session.dart';
 import 'package:cnodejs_flutter/widgets/provider.dart';
@@ -379,8 +378,8 @@ class _HomePageState extends State<HomePage> {
                   ),FlatButton(
                     child: Text('确定'),
                     onPressed: () {
-                      // TODO
                       Navigator.of(context).pop();
+                      Navigator.pushNamed(context, '/login');
                     },
                   ),
                 ],

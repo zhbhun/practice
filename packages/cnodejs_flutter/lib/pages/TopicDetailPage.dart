@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:cnodejs_flutter/entities/Reply.dart';
 import 'package:cnodejs_flutter/entities/Topic.dart';
+import 'package:cnodejs_flutter/models/session.dart';
+import 'package:cnodejs_flutter/widgets/provider.dart';
 
 class TopicDetailPageArguments {
   final String id;
@@ -98,6 +100,67 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     );
   }
 
+  Widget buildCollectBtn() {
+    return Consumer<Session>(
+      builder: (context, session) {
+        return IconButton(
+          icon: Icon(session.isLogin && _data.isCollect
+              ? Icons.favorite
+              : Icons.favorite_border),
+          onPressed: () async {
+            if (!session.isLogin) {
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false,
+                // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: SingleChildScrollView(
+                      child: Text('该操作需要登录账户，是否现在登录？'),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('取消'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('确定'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.pushNamed(context, '/login');
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              try {
+                await http.post(
+                    Uri.encodeFull(
+                        'https://cnodejs.org/api/v1/topic_collect/collect'),
+                    headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                      'Accept': 'application/json'
+                    },
+                    body:
+                        'accesstoken=${session.accessToken}&topic_id=${_data.id}');
+                // TODO 检查是否成功
+                setState(() {
+                  _data.isCollect = !_data.isCollect;
+                });
+              } catch (e) {
+                // TODO
+              }
+            }
+          },
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -153,22 +216,25 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                                         height: 32,
                                       ),
                                     ),
-                                    Container(
-                                      margin: EdgeInsets.only(left: 15),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text(_data.author.loginname),
-                                          Text(
-                                            _data.createAt,
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .caption,
-                                          ),
-                                        ],
+                                    Expanded(
+                                      child: Container(
+                                        margin: EdgeInsets.only(left: 15),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Text(_data.author.loginname),
+                                            Text(
+                                              _data.createAt,
+                                              style: Theme.of(context)
+                                                  .textTheme
+                                                  .caption,
+                                            ),
+                                          ],
+                                        ),
                                       ),
-                                    )
+                                    ),
+                                    this.buildCollectBtn(),
                                   ],
                                 ),
                               ),
