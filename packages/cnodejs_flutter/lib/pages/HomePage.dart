@@ -195,6 +195,52 @@ class _HomePageState extends State<HomePage> {
         ));
   }
 
+  Widget buildFloatingActionButton() {
+    return Consumer<Session>(
+      builder: (context, session) {
+        return FloatingActionButton(
+          onPressed: () {
+            if (!session.isLogin) {
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: SingleChildScrollView(
+                      child: Text('该操作需要登录账户，是否现在登录？'),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('取消'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('确定'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.pushNamed(context, '/login');
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('暂时不支持该功能！'),
+                ),
+              );
+            }
+          },
+          child: Icon(Icons.edit),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -358,37 +404,7 @@ class _HomePageState extends State<HomePage> {
           itemBuilder: this.buildListItem,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          showDialog<void>(
-            context: context,
-            barrierDismissible: false, // user must tap button!
-            builder: (BuildContext context) {
-              return AlertDialog(
-                content: SingleChildScrollView(
-                  child: Text(
-                      '该操作需要登录账户，是否现在登录？'),
-                ),
-                actions: <Widget>[
-                  FlatButton(
-                    child: Text('取消'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                    },
-                  ),FlatButton(
-                    child: Text('确定'),
-                    onPressed: () {
-                      Navigator.of(context).pop();
-                      Navigator.pushNamed(context, '/login');
-                    },
-                  ),
-                ],
-              );
-            },
-          );
-        },
-        child: Icon(Icons.edit),
-      ),
+      floatingActionButton: this.buildFloatingActionButton(),
     );
   }
 }
