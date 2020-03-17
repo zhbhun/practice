@@ -70,7 +70,54 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
     await this._loadData();
   }
 
-  Widget _buildReplyItem(BuildContext context, int index) {
+  Widget buildFloatingActionButton() {
+    return Consumer<Session>(
+      builder: (context, session) {
+        return FloatingActionButton(
+          onPressed: () {
+            if (!session.isLogin) {
+              showDialog<void>(
+                context: context,
+                barrierDismissible: false, // user must tap button!
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    content: SingleChildScrollView(
+                      child: Text('该操作需要登录账户，是否现在登录？'),
+                    ),
+                    actions: <Widget>[
+                      FlatButton(
+                        child: Text('取消'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                      FlatButton(
+                        child: Text('确定'),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                          Navigator.pushNamed(context, '/login');
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
+            } else {
+              Scaffold.of(context).showSnackBar(
+                SnackBar(
+                  content: Text('暂时不支持该功能！'),
+                ),
+              );
+            }
+          },
+          child: Icon(Icons.reply),
+        );
+      },
+    );
+  }
+
+
+  Widget buildReplyItem(BuildContext context, int index) {
     Reply reply = _data.replies[index];
     return Container(
       color: Colors.white,
@@ -280,7 +327,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
                     ),
                     SliverList(
                       delegate: SliverChildBuilderDelegate(
-                        this._buildReplyItem,
+                        this.buildReplyItem,
                         childCount:
                             _data.replies == null ? 0 : _data.replies.length,
                       ),
@@ -289,6 +336,7 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
           ),
         ),
       ),
+      floatingActionButton: this.buildFloatingActionButton(),
     );
   }
 }
