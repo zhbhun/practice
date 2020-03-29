@@ -1,9 +1,9 @@
 import 'package:json_annotation/json_annotation.dart';
-import 'package:cnodejs_flutter/entities/Author.dart';
-import 'package:cnodejs_flutter/entities/Topic.dart';
-import 'package:cnodejs_flutter/entities/Reply.dart';
+import 'author.dart';
+import 'topic.dart';
+import 'reply.dart';
 
-part 'Message.g.dart';
+part 'message.g.dart';
 
 @JsonSerializable(explicitToJson: true)
 class Message {

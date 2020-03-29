@@ -1,10 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:cnodejs_flutter/widgets/refresh_indicator.dart' as my;
-import 'package:cnodejs_flutter/entities/Author.dart';
-import 'package:cnodejs_flutter/entities/Topic.dart';
-import 'package:cnodejs_flutter/services/data_service.dart';
-import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
+import 'package:cnodejs_flutter/widgets.dart';
+import 'package:cnodejs_flutter/entities.dart';
+import 'package:cnodejs_flutter/services.dart';
+import 'topic_detail_page.dart';
 
 class AuthorDetailPageArguments {
   final String loginname;
@@ -22,7 +21,7 @@ class AuthorDetailPage extends StatefulWidget {
 }
 
 class _AuthorDetailPageState extends State<AuthorDetailPage> {
-  final _refreshKey = GlobalKey<my.RefreshIndicatorState>();
+  final _refreshKey = GlobalKey<CustomRefreshIndicatorState>();
 
   Author _data;
 
@@ -56,7 +55,7 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
     return Scaffold(
       body: DefaultTabController(
         length: 3,
-        child: my.RefreshIndicator(
+        child: CustomRefreshIndicator(
           key: _refreshKey,
           notificationPredicate: (_) => true,
           // 必须设置为 true 否则无法触发下拉刷新

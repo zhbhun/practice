@@ -1,15 +1,11 @@
-import 'dart:async';
-import 'dart:convert';
-import 'package:cnodejs_flutter/exceptions/http_exception.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cnodejs_flutter/entities/Message.dart';
-import 'package:cnodejs_flutter/models/session.dart';
-import 'package:cnodejs_flutter/widgets/provider.dart';
-import 'package:cnodejs_flutter/widgets/page_indicator.dart';
-import 'package:cnodejs_flutter/services/data_service.dart';
-import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
-import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
+import 'package:cnodejs_flutter/exceptions.dart';
+import 'package:cnodejs_flutter/entities.dart';
+import 'package:cnodejs_flutter/models.dart';
+import 'package:cnodejs_flutter/services.dart';
+import 'package:cnodejs_flutter/widgets.dart';
+import 'topic_detail_page.dart';
+import 'author_detail_page.dart';
 
 class MessageListPage extends StatefulWidget {
   @override

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:cnodejs_flutter/routes.dart';
-import 'package:cnodejs_flutter/models/session.dart';
-import 'package:cnodejs_flutter/widgets/provider.dart';
+import 'models.dart';
+import 'widgets.dart';
+import 'pages.dart';
 
 void main() => runApp(MyApp());
 

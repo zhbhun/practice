@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:cnodejs_flutter/exceptions/http_exception.dart';
+import 'package:cnodejs_flutter/exceptions.dart';
 
 class PageIndicator extends StatelessWidget {
   final bool loading;

@@ -1,0 +1,1 @@
+export 'src/services/data_service.dart';

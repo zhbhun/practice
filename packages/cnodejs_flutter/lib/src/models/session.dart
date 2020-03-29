@@ -1,5 +1,5 @@
 import 'package:flutter/foundation.dart';
-import 'package:cnodejs_flutter/entities/Author.dart';
+import 'package:cnodejs_flutter/entities.dart';
 
 class Session extends ChangeNotifier {
   static Session _instance;

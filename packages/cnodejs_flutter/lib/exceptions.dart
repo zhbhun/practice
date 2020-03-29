@@ -1,0 +1,1 @@
+export 'src/exceptions/http_exception.dart';

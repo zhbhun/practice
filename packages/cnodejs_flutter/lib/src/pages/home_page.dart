@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:cnodejs_flutter/entities/Topic.dart';
-import 'package:cnodejs_flutter/services/data_service.dart';
-import 'package:cnodejs_flutter/models/session.dart';
-import 'package:cnodejs_flutter/widgets/provider.dart';
-import 'package:cnodejs_flutter/widgets/page_indicator.dart';
-import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
-import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
+import 'package:cnodejs_flutter/entities.dart';
+import 'package:cnodejs_flutter/services.dart';
+import 'package:cnodejs_flutter/models.dart';
+import 'package:cnodejs_flutter/widgets.dart';
+import 'topic_detail_page.dart';
+import 'author_detail_page.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -15,7 +14,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final _refreshKey = GlobalKey<RefreshIndicatorState>();
+  final _refreshKey = GlobalKey<CustomRefreshIndicatorState>();
 
   String _tab = ''; // 全部;good|精华;share|分享;ask|问答;job|招聘
   int _page = 1;

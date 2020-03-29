@@ -1,12 +1,10 @@
 import 'dart:async';
-import 'package:cnodejs_flutter/exceptions/http_exception.dart';
 import 'package:flutter/material.dart';
-import 'package:cnodejs_flutter/entities/Reply.dart';
-import 'package:cnodejs_flutter/entities/Topic.dart';
-import 'package:cnodejs_flutter/services/data_service.dart';
-import 'package:cnodejs_flutter/models/session.dart';
-import 'package:cnodejs_flutter/widgets/provider.dart';
-import 'package:cnodejs_flutter/widgets/page_indicator.dart';
+import 'package:cnodejs_flutter/exceptions.dart';
+import 'package:cnodejs_flutter/entities.dart';
+import 'package:cnodejs_flutter/services.dart';
+import 'package:cnodejs_flutter/models.dart';
+import 'package:cnodejs_flutter/widgets.dart';
 
 class TopicDetailPageArguments {
   final String id;

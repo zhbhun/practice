@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:cnodejs_flutter/pages/HomePage.dart';
-import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
-import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
-import 'package:cnodejs_flutter/pages/LoginPage.dart';
-import 'package:cnodejs_flutter/pages/message_list_page.dart';
+import 'src/pages/author_detail_page.dart';
+import 'src/pages/home_page.dart';
+import 'src/pages/login_page.dart';
+import 'src/pages/message_list_page.dart';
+import 'src/pages/topic_detail_page.dart';
+
+export 'src/pages/author_detail_page.dart';
+export 'src/pages/home_page.dart';
+export 'src/pages/login_page.dart';
+export 'src/pages/message_list_page.dart';
+export 'src/pages/topic_detail_page.dart';
+
 
 typedef _WidgetBuilder<W, A> = W Function(BuildContext context, A arguments);
 

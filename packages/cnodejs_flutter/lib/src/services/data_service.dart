@@ -1,10 +1,8 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:cnodejs_flutter/exceptions/http_exception.dart';
-import 'package:cnodejs_flutter/entities/Author.dart';
-import 'package:cnodejs_flutter/entities/Message.dart';
-import 'package:cnodejs_flutter/entities/Topic.dart';
-import 'package:cnodejs_flutter/models/session.dart';
+import 'package:cnodejs_flutter/exceptions.dart';
+import 'package:cnodejs_flutter/entities.dart';
+import 'package:cnodejs_flutter/models.dart';
 
 Future<dynamic> request(
   String url, {

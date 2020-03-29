@@ -1,7 +1,7 @@
-import 'package:cnodejs_flutter/services/data_service.dart';
 import 'package:flutter/material.dart';
-import 'package:cnodejs_flutter/models/session.dart';
-import 'package:cnodejs_flutter/widgets/provider.dart';
+import 'package:cnodejs_flutter/services.dart';
+import 'package:cnodejs_flutter/models.dart';
+import 'package:cnodejs_flutter/widgets.dart';
 
 class LoginPage extends StatefulWidget {
   @override
