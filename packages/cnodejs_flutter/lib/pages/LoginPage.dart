@@ -1,8 +1,5 @@
-import 'dart:async';
-import 'dart:convert';
+import 'package:cnodejs_flutter/services/data_service.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
-import 'package:cnodejs_flutter/entities/Author.dart';
 import 'package:cnodejs_flutter/models/session.dart';
 import 'package:cnodejs_flutter/widgets/provider.dart';
 
@@ -17,21 +14,31 @@ class _LoginPageState extends State<LoginPage> {
   bool _isSubmitting = false;
   bool _isInvalidAsyncAccessToken = false;
 
-  Future<Map<String, dynamic>> _checkAccessToken(String accessToken) async {
-    try {
-      var response = await http.post(
-          Uri.encodeFull('https://cnodejs.org/api/v1/accesstoken'),
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'Accept': 'application/json'
-          },
-          body: 'accesstoken=$accessToken');
-      return json.decode(response.body);
-    } catch (e) {
-      Map<String, dynamic> result = Map<String, dynamic>();
-      result['success'] = true;
-      result['error_msg'] = e.toString();
-      return result;
+  void submit(Session session) async {
+    if (this._isSubmitting) {
+      return;
+    }
+    if (this._formKey.currentState.validate()) {
+      this.setState(() {
+        this._isSubmitting = true;
+      });
+      try {
+        var author = await DataService.getInstance().login(this._accessToken);
+        this.setState(() {
+          this._isSubmitting = false;
+        });
+        session.login(
+          user: author,
+          accessToken: this._accessToken,
+        );
+        Navigator.of(context).pop();
+      } catch (e) {
+        this._isInvalidAsyncAccessToken = true;
+        this._formKey.currentState.validate();
+        this.setState(() {
+          this._isSubmitting = false;
+        });
+      }
     }
   }
 
@@ -112,33 +119,7 @@ class _LoginPageState extends State<LoginPage> {
                                     onPressed: () async {
                                       // Validate will return true if the form is valid, or false if
                                       // the form is invalid.
-                                      if (this
-                                          ._formKey
-                                          .currentState
-                                          .validate()) {
-                                        this.setState(() {
-                                          this._isSubmitting = true;
-                                        });
-                                        var response = await this
-                                            ._checkAccessToken(
-                                                this._accessToken);
-                                        if (response['success'] == false) {
-                                          _isInvalidAsyncAccessToken = true;
-                                          this._formKey.currentState.validate();
-                                          this.setState(() {
-                                            this._isSubmitting = false;
-                                          });
-                                        } else {
-                                          this.setState(() {
-                                            this._isSubmitting = false;
-                                          });
-                                          session.login(
-                                            user: Author.fromJson(response),
-                                            accessToken: this._accessToken,
-                                          );
-                                          Navigator.of(context).pop();
-                                        }
-                                      }
+                                      this.submit(session);
                                     },
                                     child: Text(
                                         this._isSubmitting ? '登录中...' : '登录'),

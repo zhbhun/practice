@@ -1,11 +1,11 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:cnodejs_flutter/entities/Topic.dart';
+import 'package:cnodejs_flutter/services/data_service.dart';
 import 'package:cnodejs_flutter/models/session.dart';
 import 'package:cnodejs_flutter/widgets/provider.dart';
+import 'package:cnodejs_flutter/widgets/page_indicator.dart';
 import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
 import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
 
@@ -20,58 +20,51 @@ class _HomePageState extends State<HomePage> {
   String _tab = ''; // 全部;good|精华;share|分享;ask|问答;job|招聘
   int _page = 1;
   bool _loading = false;
+  Exception _error;
   List<Topic> _data;
   int _lastRefreshTime;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(microseconds: 0), () {
-      _refreshKey.currentState.show();
-    });
+    this._refresh();
   }
 
   Future<void> _loadData({int page: 1}) async {
     var loadTime = DateTime.now().millisecondsSinceEpoch;
     setState(() {
-      _loading = true;
-      _lastRefreshTime =
-          page == 1 ? DateTime.now().millisecondsSinceEpoch : _lastRefreshTime;
+      this._loading = true;
+      this._error = null;
+      this._lastRefreshTime = page == 1
+          ? DateTime.now().millisecondsSinceEpoch
+          : this._lastRefreshTime;
     });
 
     try {
-      var response = await http.get(
-        Uri.encodeFull(
-            'https://cnodejs.org/api/v1/topics?mdrender=false&tab=${this._tab}&page=$page&limit=15'),
-        headers: {'Accept': 'application/json'},
-      );
-      var responseJSON = json.decode(response.body);
-      if (page > 1 && loadTime < _lastRefreshTime) {
-        // 如果先后进行了分页加载和下拉刷新，那么需要忽略掉分页加载的数据
+      List<Topic> topics =
+          await DataService.getInstance().getTopics(tab: this._tab, page: page);
+      if (page > 1 && loadTime < this._lastRefreshTime) {
         return;
       }
       setState(() {
-        // TODO: 判断是否加载成功
-        _page = page;
-        _loading = false;
-        List<dynamic> responseData = responseJSON['data'];
-        Iterable<Topic> data = responseData.map((item) {
-          if (item['author'] != null) {
-            item['author']['id'] = item['author_id'];
-          }
-          return Topic.fromJson(item);
-        });
+        this._page = page;
+        this._loading = false;
         if (page == 1) {
-          _data = data.toList();
+          this._data = topics;
         } else {
           var newData = _data.sublist(0);
-          newData.addAll(data);
-          _data = newData;
+          newData.addAll(topics);
+          this._data = newData;
         }
       });
     } catch (e) {
+      print(e);
+      if (page > 1 && loadTime < this._lastRefreshTime) {
+        return;
+      }
       setState(() {
-        _loading = false;
+        this._loading = false;
+        this._error = e;
       });
     }
   }
@@ -406,14 +399,20 @@ class _HomePageState extends State<HomePage> {
         title: Text('CNode 社区'),
       ),
       drawer: this.buildDrawer(),
-      body: RefreshIndicator(
-        key: _refreshKey,
-        onRefresh: _refresh,
-        child: ListView.builder(
-          itemCount: _data == null || _data.length == 0 ? 0 : _data.length + 1,
-          itemBuilder: this.buildListItem,
-        ),
-      ),
+      body: this._data == null || this._data.length == 0
+          ? PageIndicator(
+              loading: this._loading,
+              exception: this._error,
+              onRetry: this._refresh,
+            )
+          : RefreshIndicator(
+              key: this._refreshKey,
+              onRefresh: this._refresh,
+              child: ListView.builder(
+                itemCount: _data.length + 1,
+                itemBuilder: this.buildListItem,
+              ),
+            ),
       floatingActionButton: this.buildFloatingActionButton(),
     );
   }

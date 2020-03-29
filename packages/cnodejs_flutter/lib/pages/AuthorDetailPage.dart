@@ -1,10 +1,9 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:cnodejs_flutter/widgets/refresh_indicator.dart' as my;
 import 'package:cnodejs_flutter/entities/Author.dart';
 import 'package:cnodejs_flutter/entities/Topic.dart';
+import 'package:cnodejs_flutter/services/data_service.dart';
 import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
 
 class AuthorDetailPageArguments {
@@ -37,28 +36,14 @@ class _AuthorDetailPageState extends State<AuthorDetailPage> {
 
   Future<void> _loadData() async {
     try {
-      var response = await http.get(
-        Uri.encodeFull(
-            'https://cnodejs.org/api/v1/user/${this.widget.arguments.loginname}'),
-        headers: {'Accept': 'application/json'},
-      );
-      var collectResposne = await http.get(
-          'https://cnodejs.org/api/v1/topic_collect/${this.widget.arguments.loginname}');
-      var responseJSON = json.decode(response.body);
-      var collectResponseJSON = json.decode(collectResposne.body);
-      var collectList = collectResponseJSON['data'] as List<dynamic>;
-      setState(() {
-        // TODO: 判断是否加载成功
-        Map<String, dynamic> responseData = responseJSON['data'];
-        responseData['collect_topics'] = collectList.map((item) {
-          item['author']['id'] = item['author_id'];
-          return item;
-        }).toList();
-        _data = Author.fromJson(responseData);
+      var author = await DataService.getInstance()
+          .getAuthor(this.widget.arguments.loginname);
+      this.setState(() {
+        this._data = author;
       });
     } catch (e) {
-      print(e);
       // TODO: 提示加载失败
+      print(e);
     }
   }
 

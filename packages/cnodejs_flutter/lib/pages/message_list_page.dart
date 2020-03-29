@@ -1,11 +1,13 @@
 import 'dart:async';
 import 'dart:convert';
+import 'package:cnodejs_flutter/exceptions/http_exception.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:cnodejs_flutter/entities/Message.dart';
 import 'package:cnodejs_flutter/models/session.dart';
 import 'package:cnodejs_flutter/widgets/provider.dart';
+import 'package:cnodejs_flutter/widgets/page_indicator.dart';
+import 'package:cnodejs_flutter/services/data_service.dart';
 import 'package:cnodejs_flutter/pages/TopicDetailPage.dart';
 import 'package:cnodejs_flutter/pages/AuthorDetailPage.dart';
 
@@ -18,14 +20,13 @@ class _MessageListPageState extends State<MessageListPage> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
   bool _loading = false;
+  Exception _failure;
   List<Message> _data;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(microseconds: 0), () {
-      _refreshKey.currentState.show();
-    });
+    this._refresh();
     Session.getInstance().addListener(this._handleSessionChange);
   }
 
@@ -37,31 +38,26 @@ class _MessageListPageState extends State<MessageListPage> {
 
   Future<void> _refresh() async {
     if (!Session.getInstance().isLogin) {
-      this._data = [];
       this._loading = false;
+      this._failure = new HTTPException(401, '您还没有登录！');
+      this._data = [];
       return;
     }
     setState(() {
-      _loading = true;
+      this._loading = true;
+      this._failure = null;
     });
 
     try {
-      var response = await http.get(
-        Uri.encodeFull('https://cnodejs.org/api/v1/messages?mdrender=false'),
-        headers: {'Accept': 'application/json'},
-      );
-      var responseJSON = json.decode(response.body);
+      List<Message> messages = await DataService.getInstance().getMessages();
       setState(() {
-        // TODO: 判断是否加载成功
-        List<dynamic> responseData = responseJSON['data'];
-        Iterable<Message> data = responseData.map((item) {
-          return Message.fromJson(item);
-        });
-        this._data = data.toList();
+        this._data = messages;
       });
     } catch (e) {
       setState(() {
-        _loading = false;
+        print(e);
+        this._loading = false;
+        this._failure = e;
       });
     }
   }
@@ -199,14 +195,20 @@ class _MessageListPageState extends State<MessageListPage> {
       appBar: AppBar(
         title: Text('消息'),
       ),
-      body: RefreshIndicator(
-        key: _refreshKey,
-        onRefresh: _refresh,
-        child: ListView.builder(
-          itemCount: _data != null ? _data.length : 0,
-          itemBuilder: this.buildListItem,
-        ),
-      ),
+      body: this._data == null || this._data.length == 0
+          ? PageIndicator(
+              loading: this._loading,
+              exception: this._failure,
+              onRetry: this._refresh,
+            )
+          : RefreshIndicator(
+              key: _refreshKey,
+              onRefresh: _refresh,
+              child: ListView.builder(
+                itemCount: _data != null ? _data.length : 0,
+                itemBuilder: this.buildListItem,
+              ),
+            ),
       floatingActionButton: this.buildFloatingActionButton(),
     );
   }

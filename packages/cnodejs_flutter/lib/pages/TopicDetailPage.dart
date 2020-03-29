@@ -1,11 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
+import 'package:cnodejs_flutter/exceptions/http_exception.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'package:cnodejs_flutter/entities/Reply.dart';
 import 'package:cnodejs_flutter/entities/Topic.dart';
+import 'package:cnodejs_flutter/services/data_service.dart';
 import 'package:cnodejs_flutter/models/session.dart';
 import 'package:cnodejs_flutter/widgets/provider.dart';
+import 'package:cnodejs_flutter/widgets/page_indicator.dart';
 
 class TopicDetailPageArguments {
   final String id;
@@ -25,15 +26,14 @@ class TopicDetailPage extends StatefulWidget {
 class _TopicDetailPageState extends State<TopicDetailPage> {
   final _refreshKey = GlobalKey<RefreshIndicatorState>();
 
+  bool _loading = false;
+  Exception _error;
   Topic _data;
-  bool _session;
 
   @override
   void initState() {
     super.initState();
-    Future.delayed(const Duration(microseconds: 0), () {
-      _refreshKey.currentState.show();
-    });
+    this._refresh();
     Session.getInstance().addListener(this._handleSessionChange);
   }
 
@@ -44,25 +44,30 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
   }
 
   void _handleSessionChange() {
-    _refreshKey.currentState.show();
+    if (this._refreshKey.currentState != null) {
+      this._refreshKey.currentState.show();
+    } else {
+      this._refresh();
+    }
   }
 
   Future<void> _loadData() async {
+    setState(() {
+      this._loading = true;
+      this._error = null;
+    });
     try {
-      var response = await http.get(
-        Uri.encodeFull(
-            'https://cnodejs.org/api/v1/topic/${this.widget.arguments.id}?mdrender=false'),
-        headers: {'Accept': 'application/json'},
-      );
-      var responseJSON = json.decode(response.body);
+      var topic =
+          await DataService.getInstance().getTopic(this.widget.arguments.id);
       setState(() {
-        // TODO: 判断是否加载成功
-        Map<String, dynamic> responseData = responseJSON['data'];
-        responseData['author']['id'] = responseData['author_id'];
-        _data = Topic.fromJson(responseData);
+        this._loading = false;
+        _data = topic;
       });
     } catch (e) {
-      // TODO: 提示加载失败
+      setState(() {
+        this._loading = false;
+        this._error = e;
+      });
     }
   }
 
@@ -115,7 +120,6 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
       },
     );
   }
-
 
   Widget buildReplyItem(BuildContext context, int index) {
     Reply reply = _data.replies[index];
@@ -197,26 +201,143 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
               );
             } else {
               try {
-                await http.post(
-                    Uri.encodeFull(
-                        'https://cnodejs.org/api/v1/topic_collect/collect'),
-                    headers: {
-                      'Content-Type': 'application/x-www-form-urlencoded',
-                      'Accept': 'application/json'
-                    },
-                    body:
-                        'accesstoken=${session.accessToken}&topic_id=${_data.id}');
-                // TODO 检查是否成功
+                DataService.getInstance().collectTopic(this._data.id);
                 setState(() {
                   _data.isCollect = !_data.isCollect;
                 });
               } catch (e) {
-                // TODO
+                if (e is HTTPException) {
+                  HTTPException httpException = e;
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(httpException.message),
+                    ),
+                  );
+                } else {
+                  Scaffold.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('操作失败'),
+                    ),
+                  );
+                }
               }
             }
           },
         );
       },
+    );
+  }
+
+  Widget buildContent() {
+    return SliverToBoxAdapter(
+      child: Card(
+        elevation: 1,
+        margin: EdgeInsets.only(
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 15,
+        ),
+        shape: RoundedRectangleBorder(),
+        child: Container(
+          padding: EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.only(
+                  bottom: 15,
+                ),
+                child: Text(
+                  this._data.title,
+                  style: Theme.of(context).textTheme.title,
+                ),
+              ),
+              Container(
+                padding: EdgeInsets.only(
+                  bottom: 15,
+                ),
+                child: Row(
+                  children: <Widget>[
+                    ClipOval(
+                      child: Image.network(
+                        _data.author.avatarURL,
+                        width: 32,
+                        height: 32,
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        margin: EdgeInsets.only(left: 15),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(_data.author.loginname),
+                            Text(
+                              _data.createAt,
+                              style: Theme.of(context).textTheme.caption,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    this.buildCollectBtn(),
+                  ],
+                ),
+              ),
+              Container(
+                child: Text(
+                  _data.content,
+                  style: Theme.of(context).textTheme.body1,
+                ),
+              )
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildBody() {
+    return RefreshIndicator(
+      key: this._refreshKey,
+      onRefresh: this._refresh,
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey.shade100,
+        ),
+        child: CustomScrollView(
+          slivers: this._data == null
+              ? []
+              : <Widget>[
+                  this.buildContent(),
+                  SliverToBoxAdapter(
+                    child: Container(
+                      color: Colors.white,
+                      height: 50,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 15,
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('${_data.replies.length}条回复',
+                              style: Theme.of(context).textTheme.title),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SliverList(
+                    delegate: SliverChildBuilderDelegate(
+                      this.buildReplyItem,
+                      childCount:
+                          _data.replies == null ? 0 : _data.replies.length,
+                    ),
+                  ),
+                ],
+        ),
+      ),
     );
   }
 
@@ -226,116 +347,13 @@ class _TopicDetailPageState extends State<TopicDetailPage> {
       appBar: AppBar(
         title: Text('话题'),
       ),
-      body: RefreshIndicator(
-        key: this._refreshKey,
-        onRefresh: this._refresh,
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey.shade100,
-          ),
-          child: CustomScrollView(
-            slivers: this._data == null
-                ? []
-                : <Widget>[
-                    SliverToBoxAdapter(
-                      child: Card(
-                        elevation: 1,
-                        margin: EdgeInsets.only(
-                          left: 0,
-                          top: 0,
-                          right: 0,
-                          bottom: 15,
-                        ),
-                        shape: RoundedRectangleBorder(),
-                        child: Container(
-                          padding: EdgeInsets.symmetric(
-                              horizontal: 15, vertical: 10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.only(
-                                  bottom: 15,
-                                ),
-                                child: Text(
-                                  this._data.title,
-                                  style: Theme.of(context).textTheme.title,
-                                ),
-                              ),
-                              Container(
-                                padding: EdgeInsets.only(
-                                  bottom: 15,
-                                ),
-                                child: Row(
-                                  children: <Widget>[
-                                    ClipOval(
-                                      child: Image.network(
-                                        _data.author.avatarURL,
-                                        width: 32,
-                                        height: 32,
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Container(
-                                        margin: EdgeInsets.only(left: 15),
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Text(_data.author.loginname),
-                                            Text(
-                                              _data.createAt,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .caption,
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ),
-                                    this.buildCollectBtn(),
-                                  ],
-                                ),
-                              ),
-                              Container(
-                                child: Text(
-                                  _data.content,
-                                  style: Theme.of(context).textTheme.body1,
-                                ),
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    SliverToBoxAdapter(
-                      child: Container(
-                        color: Colors.white,
-                        height: 50,
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 15,
-                        ),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('${_data.replies.length}条回复',
-                                style: Theme.of(context).textTheme.title),
-                          ],
-                        ),
-                      ),
-                    ),
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate(
-                        this.buildReplyItem,
-                        childCount:
-                            _data.replies == null ? 0 : _data.replies.length,
-                      ),
-                    ),
-                  ],
-          ),
-        ),
-      ),
+      body: this._data == null
+          ? PageIndicator(
+              loading: this._loading,
+              exception: this._error,
+              onRetry: this._refresh,
+            )
+          : this.buildBody(),
       floatingActionButton: this.buildFloatingActionButton(),
     );
   }
